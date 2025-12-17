@@ -29,7 +29,7 @@ export async function procesarOrdenes(ordenes) {
 
   return { procesadas, rechazadas }; // <--- Aqui retorno 2 objetos 1 con las órdenes procesadas y otro con las rechazadas
 }
-
+ 
 // Creo una funcion para calcular el costo segun el tipo de servicio
 function calcularCosto(orden) {
   const tarifas = {  // <--- Aqui defino un objeto con las tarifas por tipo de servicio

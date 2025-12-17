@@ -1,89 +1,64 @@
-1. Datos de entrada
-El sistema recibe un arreglo de objetos, cada objeto es una transacción financiera.
+# Guía Técnica – Ejercicio 1  
+**Sistema de Gestión y Validación de Transacciones Financieras (Async/Await)**
 
-Cada transacción contiene:
+---
 
-idUsuario → número entero que identifica al usuario.
+## 1. Datos de entrada
+- El sistema recibe un **arreglo de objetos**, cada objeto es una transacción financiera.  
+- Cada transacción contiene:  
+  - `idUsuario` (number)  
+  - `tipo` (string: "ingreso" o "egreso")  
+  - `monto` (number > 0)  
+  - `categoria` (string)  
+  - `fecha` (string, formato DD-MM-YYYY)
 
-tipo → "ingreso" o "egreso".
+---
 
-monto → número mayor a 0.
+## 2. Procesos principales
+1. **Validación de datos**  
+   - Se revisa que cada campo cumpla las reglas mínimas.  
+   - Si algo falla, se lanza un `Error` con mensaje claro.  
 
-categoria → texto que describe la categoría de la transacción.
+2. **Procesamiento de transacciones**  
+   - Se recorre el arreglo con `for...of`.  
+   - Se inicializa el saldo del usuario en 0 si no existe.  
+   - Se actualiza el saldo:  
+     - Si es ingreso, se suma.  
+     - Si es egreso, se resta.  
 
-fecha → texto con la fecha en formato YYYY-MM-DD.
+3. **Validación externa (async/await)**  
+   - Se simula un retardo de 300ms.  
+   - Si el monto es mayor a 1 millón, se rechaza la transacción como sospechosa.  
 
-Consideraciones:
+4. **Análisis lógico adicional**  
+   - Se detectan usuarios con saldo negativo.  
+   - Se detectan usuarios con múltiples egresos consecutivos.  
 
-El monto no puede ser cero ni negativo.
+5. **Manejo de errores**  
+   - Todo el flujo está protegido con `try/catch`.  
+   - Los errores se acumulan en un arreglo `rechazadas`.  
+   - Los mensajes son claros y personalizados.  
 
-El tipo de transacción debe coincidir exactamente con los valores permitidos.
+---
 
-Pueden existir transacciones con datos incompletos o incorrectos.
+## 3. Datos de salida
+- **Saldos finales por usuario** → objeto con cada usuario y su saldo.  
+- **Transacciones rechazadas** → arreglo con las transacciones inválidas y el motivo.  
+- **Mensajes en consola**:  
+  - Advertencia si un usuario queda con saldo negativo.  
+  - Advertencia si un usuario tiene múltiples egresos consecutivos.  
 
-Todos los datos deben validarse antes de cualquier cálculo.
-
-2. Procesos principales
-Validación de datos
-
-Se revisa que cada campo cumpla las reglas mínimas.
-
-Si algo falla, se lanza un Error con mensaje claro.
-
-Procesamiento de transacciones
-
-Se recorre el arreglo con for...of.
-
-Se inicializa el saldo del usuario en 0 si no existe.
-
-Se actualiza el saldo:
-
-Si es ingreso, se suma.
-
-Si es egreso, se resta.
-
-Análisis lógico
-
-Se identifican usuarios con saldo negativo.
-
-Se detectan usuarios con múltiples egresos consecutivos.
-
-Asincronía (solo async/await)
-
-Se simula validación externa con un retardo de 300ms.
-
-Si el monto es mayor a 1 millón, se rechaza la transacción.
-
-Justificación:
-
-async/await permite escribir código asincrónico más claro y legible, parecido al estilo síncrono.
-
-Se eligió este enfoque porque simplifica el manejo de errores con try/catch.
-
-Manejo de errores
-
-Todo el flujo está protegido con try/catch.
-
-Los errores se acumulan en un arreglo rechazadas.
-
-Los mensajes son claros y personalizados.
-
-El programa nunca se bloquea: sigue procesando las demás transacciones.
-
-3. Datos de salida
-Saldos finales por usuario → objeto con cada usuario y su saldo.
-
-Transacciones rechazadas → arreglo con las transacciones inválidas y el motivo.
-
-Mensajes en consola:
-
-Advertencia si un usuario queda con saldo negativo.
-
-Advertencia si un usuario tiene múltiples egresos consecutivos.
-
-Mensajes de validación externa (OK o sospechosa).
+Ejemplo de salida:  
+```txt
+Usuario 2 presenta saldo negativo: -400000
+Usuario 3 tiene múltiples egresos consecutivos
+Saldos finales por usuario: { '1': 300000, '2': -400000, '3': -250000 }
+Transacciones rechazadas: [
+  { tx: {...}, motivo: 'Transacción sospechosa por monto elevado' }
+]
 
 4. Pruebas realizadas
+
 Caso válido: ingreso y egreso correctos → saldo calculado bien.
 
 Monto negativo: rechazado.
@@ -97,12 +72,11 @@ Egresos consecutivos: advertencia en consola.
 Monto sospechoso (>1 millón): rechazado por validación externa.
 
 5. Justificación técnica
-Uso de let y prompt-sync → permite interacción real con el usuario.
+
+Uso de async/await → estilo moderno, más claro y legible.
 
 Uso de try/catch → garantiza que el programa nunca se bloquee.
 
-Uso de async/await → hace más clara la simulación de validación externa.
+Separación en funciones (procesarTransacciones, validarTransaccion, detectarEgresosConsecutivos, validarExterna) → facilita mantenimiento y pruebas.
 
-Uso de operadores modernos → mejora la legibilidad y evita mutaciones peligrosas.
-
-Separación en funciones (validarTransaccion, detectarEgresosConsecutivos, validarExterna) → facilita mantenimiento y pruebas.
+Uso de operadores modernos (for...of, ternario) → mejora la legibilidad y claridad del código
