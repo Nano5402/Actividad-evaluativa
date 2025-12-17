@@ -1,10 +1,10 @@
-# Guía Técnica – Ejercicio 1  
-**Sistema de Gestión y Validación de Transacciones Financieras (Async/Await)**
+Guía Técnica – Ejercicio 1  
+Sistema de Gestión y Validación de Transacciones Financieras
 
 ---
 
-## 1. Datos de entrada
-- El sistema recibe un **arreglo de objetos**, cada objeto es una transacción financiera.  
+1. Datos de entrada
+- El sistema recibe un arreglo de objetos, cada objeto es una transacción financiera.  
 - Cada transacción contiene:  
   - `idUsuario` (number)  
   - `tipo` (string: "ingreso" o "egreso")  
@@ -14,48 +14,40 @@
 
 ---
 
-## 2. Procesos principales
-1. **Validación de datos**  
+2. Procesos principales
+
+1. Validación de datos  
    - Se revisa que cada campo cumpla las reglas mínimas.  
    - Si algo falla, se lanza un `Error` con mensaje claro.  
 
-2. **Procesamiento de transacciones**  
+2. Procesamiento de transacciones  
    - Se recorre el arreglo con `for...of`.  
    - Se inicializa el saldo del usuario en 0 si no existe.  
    - Se actualiza el saldo:  
      - Si es ingreso, se suma.  
      - Si es egreso, se resta.  
 
-3. **Validación externa (async/await)**  
+3. Validación externa (async/await)  
    - Se simula un retardo de 300ms.  
    - Si el monto es mayor a 1 millón, se rechaza la transacción como sospechosa.  
 
-4. **Análisis lógico adicional**  
+4. Análisis lógico adicional  
    - Se detectan usuarios con saldo negativo.  
    - Se detectan usuarios con múltiples egresos consecutivos.  
 
-5. **Manejo de errores**  
+5. Manejo de errores  
    - Todo el flujo está protegido con `try/catch`.  
    - Los errores se acumulan en un arreglo `rechazadas`.  
    - Los mensajes son claros y personalizados.  
 
 ---
 
-## 3. Datos de salida
-- **Saldos finales por usuario** → objeto con cada usuario y su saldo.  
-- **Transacciones rechazadas** → arreglo con las transacciones inválidas y el motivo.  
-- **Mensajes en consola**:  
+ 3. Datos de salida
+- Saldos finales por usuario → objeto con cada usuario y su saldo.  
+- Transacciones rechazadas** → arreglo con las transacciones inválidas y el motivo.  
+- Mensajes en consola:  
   - Advertencia si un usuario queda con saldo negativo.  
   - Advertencia si un usuario tiene múltiples egresos consecutivos.  
-
-Ejemplo de salida:  
-```txt
-Usuario 2 presenta saldo negativo: -400000
-Usuario 3 tiene múltiples egresos consecutivos
-Saldos finales por usuario: { '1': 300000, '2': -400000, '3': -250000 }
-Transacciones rechazadas: [
-  { tx: {...}, motivo: 'Transacción sospechosa por monto elevado' }
-]
 
 4. Pruebas realizadas
 
